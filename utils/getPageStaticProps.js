@@ -18,6 +18,10 @@ export const getPageStaticProps = async (context) => {
             id
             blocks(postTemplate: false)
           }
+          ... on Property {
+            id
+            blocks(postTemplate: false)
+          }
         }
         acfOptionsMainMenu {
           mainMenu {
