@@ -26,12 +26,7 @@ export const PropertyCard = ({
     >
       <div className="flex w-full">
         <div className="w-[300px] h-[200px] relative">
-          <Image
-            src={image}
-            fill
-            style={{ objectFit: "cover" }}
-            alt=""
-          />
+          <Image src={image} fill style={{ objectFit: "cover" }} alt="" />
         </div>
       </div>
       <div className="mt-3 text-lg font-bold">{title}</div>

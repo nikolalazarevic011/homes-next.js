@@ -1,21 +1,21 @@
+"use client";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Results } from "./Results.js";
-import { Pagination } from "./Pagination/Pagination.js";
-import { useRouter } from "next/router.js";
+import { Pagination } from "./Pagination";
+import { Results } from "./Results/Results";
 import queryString from "query-string";
-import { Filters } from "./Filters/Filters.js";
+import { Filters } from "./Filters";
 
 export const PropertySearch = () => {
   const [properties, setProperties] = useState([]);
   const [totalResults, setTotalResults] = useState(0);
-  const router = useRouter();
-
   const pageSize = 3;
+  const router = useRouter();
+  const pathname = usePathname();
 
   const search = async () => {
     const { page, minPrice, maxPrice, hasParking, petFriendly } =
-      queryString.parse(window.location.search); //36. lekcija , 4ti minuit
-
+      queryString.parse(window.location.search);//36. lekcija , 4ti minuit
     const filters = {};
     if (minPrice) {
       filters.minPrice = parseInt(minPrice); //prebacujemo u ono sto wp ocekuje, posto je sve string sto user ukuca u input/search
@@ -33,13 +33,11 @@ export const PropertySearch = () => {
     const response = await fetch(`/api/search`, {
       method: "POST",
       body: JSON.stringify({
-        page: parseInt(page || 1),
+        page: parseInt(page || "1"),
         ...filters,
       }),
     });
-
     const data = await response.json();
-    console.log("SEARCH DATA", data);
     setProperties(data.properties);
     setTotalResults(data.total);
   };
@@ -49,16 +47,13 @@ export const PropertySearch = () => {
       window.location.search
     );
 
-    await router.push(
-      //old query before lek 40
-      // `${router.query.slug.join("/")}?page=${pageNumber}`,
-      `${router.query.slug.join(
-        "/"
-      )}?page=${pageNumber}&petFriendly=${petFriendly === "true"}&hasParking=${hasParking === "true"}&minPrice=${minPrice}&maxPrice=${maxPrice}`,
-      null,
-      { shallow: true }
+    router.push(
+      `${pathname}?page=${pageNumber}&petFriendly=${
+        petFriendly === "true"
+      }&hasParking=${
+        hasParking === "true"
+      }&minPrice=${minPrice}&maxPrice=${maxPrice}`
     );
-    search();
   };
 
   useEffect(() => {
@@ -73,17 +68,9 @@ export const PropertySearch = () => {
   }) => {
     // update our browser url
     // search
-    console.log("FILTERS: ", petFriendly, hasParking, minPrice, maxPrice);
-    await router.push(
-      `${router.query.slug.join(
-        "/"
-      )}?page=1&petFriendly=${!!petFriendly}&hasParking=${!!hasParking}&minPrice=${minPrice}&maxPrice=${maxPrice}`,
-      null,
-      {
-        shallow: true,
-      }
+    router.push(
+      `${pathname}?page=1&petFriendly=${!!petFriendly}&hasParking=${!!hasParking}&minPrice=${minPrice}&maxPrice=${maxPrice}`
     );
-    search();
   };
 
   return (

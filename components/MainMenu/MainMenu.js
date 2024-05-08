@@ -1,3 +1,4 @@
+"use client";
 import { ButtonLink } from "components/ButtonLink";
 import Link from "next/link";
 import { useState } from "react";
